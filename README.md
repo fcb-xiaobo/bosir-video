@@ -28,6 +28,7 @@ npm install
 npm run dev
 npm run build
 npm run package
+npm run dist:zip
 ```
 
 ## Local Run Guide

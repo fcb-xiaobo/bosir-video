@@ -109,6 +109,29 @@ Run it:
 Start-Process '.\release\win-unpacked\XiaoBo Windows.exe'
 ```
 
+Do not send only this exe file to other people. The exe in `win-unpacked` depends on the dll, `resources`, `locales`, and other files in the same folder.
+
+## Package a Sendable Zip
+
+Use this when you want to send the app to another Windows computer:
+
+```powershell
+Set-Location 'F:\study_apk\xiaobo-windows-client'
+npm run dist:zip
+```
+
+Output path:
+
+```powershell
+F:\study_apk\xiaobo-windows-client\release\XiaoBo-Windows-0.1.0.zip
+```
+
+Send this zip file to other people. They should:
+
+1. Extract the zip file.
+2. Open the extracted `XiaoBo-Windows-0.1.0` folder.
+3. Double-click `XiaoBo Windows.exe`.
+
 ## Update Local Code From GitHub
 
 If the GitHub repo has newer code:
