@@ -30,6 +30,10 @@ npm run build
 npm run package
 ```
 
+## Local Run Guide
+
+See `docs/RUNNING.md` for the full Windows install, run, package, update, and troubleshooting flow.
+
 ## Reference
 
 - Design: `docs/superpowers/specs/2026-07-14-windows-client-phase1-design.md`
