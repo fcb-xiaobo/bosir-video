@@ -1,0 +1,50 @@
+{
+  "name": "xiaobo-windows-client",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Windows 10/11 desktop client for XiaoBo video playback.",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "electron:dev": "concurrently -k \"npm:dev\" \"wait-on http://127.0.0.1:5173 && electron .\"",
+    "build": "tsc -p tsconfig.node.json && tsc -p tsconfig.json && vite build",
+    "package": "npm run build && electron-builder --dir",
+    "dist": "npm run build && electron-builder"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.7",
+    "typescript": "^5.7.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "electron-store": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "concurrently": "^9.1.2",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.xiaobo.windows",
+    "productName": "XiaoBo Windows",
+    "electronDist": "node_modules/electron/dist",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    }
+  }
+}
