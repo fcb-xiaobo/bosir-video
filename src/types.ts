@@ -28,7 +28,9 @@ export type VideoCard = {
 export type Episode = {
   id: string;
   title: string;
-  playUrl: string;
+  playUrl?: string;
+  siteId?: string;
+  episodeVodId?: string;
 };
 
 export type VideoDetail = VideoCard & {

@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "electron:dev": "concurrently -k \"npm:dev\" \"wait-on http://127.0.0.1:5173 && electron .\"",
+    "test": "vitest run",
     "build": "tsc -p tsconfig.node.json && tsc -p tsconfig.json && vite build",
     "package": "npm run build && electron-builder --dir",
     "dist:zip": "npm run package && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-zip.ps1",
@@ -17,15 +18,16 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
     "@types/node": "^22.10.5",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^9.1.2",
     "electron": "^33.2.1",
     "electron-builder": "^25.1.8",
     "typescript": "^5.7.2",
     "vite": "^6.0.7",
+    "vitest": "^4.1.10",
     "wait-on": "^8.0.1"
   },
   "build": {

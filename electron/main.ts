@@ -1,9 +1,17 @@
 import { app, BrowserWindow, ipcMain, Menu } from "electron";
 import fs from "node:fs";
 import path from "node:path";
+import { createApiSettings } from "./apiSettings";
+import type { ApiErrorPayload, IpcResult } from "./apiTypes";
+import { ApiGatewayError, createVideoApiGateway } from "./videoApiGateway";
 
 const isDev = !app.isPackaged;
 let mainWindow: BrowserWindow | null = null;
+const apiSettings = createApiSettings(app);
+const videoApiGateway = createVideoApiGateway({
+  getBaseUrl: () => apiSettings.getStatus().baseUrl,
+  log: writeLog
+});
 
 function writeLog(message: string) {
   const line = `[${new Date().toISOString()}] ${message}\n`;
@@ -66,6 +74,38 @@ function createWindow() {
 }
 
 ipcMain.handle("app:getVersion", () => app.getVersion());
+
+function toApiError(error: unknown): ApiErrorPayload {
+  if (error instanceof ApiGatewayError) {
+    return {
+      code: error.code,
+      message: error.message,
+      detail: error.detail
+    };
+  }
+
+  return {
+    code: "NETWORK_ERROR",
+    message: error instanceof Error ? error.message : String(error)
+  };
+}
+
+async function handleApi<T>(callback: () => Promise<T> | T): Promise<IpcResult<T>> {
+  try {
+    return { ok: true, data: await callback() };
+  } catch (error) {
+    writeLog(`api failed ${String(error)}`);
+    return { ok: false, error: toApiError(error) };
+  }
+}
+
+ipcMain.handle("api:getStatus", () => handleApi(() => apiSettings.getStatus()));
+ipcMain.handle("api:setBaseUrl", (_event, baseUrl: string) => handleApi(() => apiSettings.setBaseUrl(baseUrl)));
+ipcMain.handle("api:testEndpoint", () => handleApi(() => videoApiGateway.testEndpoint()));
+ipcMain.handle("api:loadHome", () => handleApi(() => videoApiGateway.loadHome()));
+ipcMain.handle("api:searchVideos", (_event, keyword: string) => handleApi(() => videoApiGateway.searchVideos(keyword)));
+ipcMain.handle("api:loadVideoDetail", (_event, video) => handleApi(() => videoApiGateway.loadVideoDetail(video)));
+ipcMain.handle("api:loadPlayUrl", (_event, params) => handleApi(() => videoApiGateway.loadPlayUrl(params)));
 
 app.whenReady().then(createWindow);
 

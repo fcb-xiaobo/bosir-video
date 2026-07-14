@@ -31,6 +31,25 @@ Set-Location 'F:\study_apk\xiaobo-windows-client'
 Start-Process '.\release\win-unpacked\XiaoBo Windows.exe'
 ```
 
+## Connect Real Video API
+
+The Windows client now calls the Android-compatible API paths from the Electron main process:
+
+- Home: `v6/vod/home.capi`
+- Search: `vod/search/query`
+- Detail: `v2/vod/detail.capi`
+- Play URL: `vod/episodePlayUrl`
+
+The API domain is not hardcoded because the Android APK resolves its domain dynamically. Configure it in the app:
+
+1. Open `XiaoBo Windows.exe`.
+2. Click `诊断`.
+3. Enter the real API root address, for example `https://your-api-domain.com`.
+4. Click `保存并加载首页`.
+5. Click `测试接口` if you need to check whether the address returns recognizable video data.
+
+When the API root is configured correctly, the sidebar badge changes to `真实接口`, home and search use HTTP API results, and playback requests a real episode play URL. If the API root is missing or invalid, the app clearly marks the content as `演示数据`.
+
 ## First-Time Source Setup
 
 Open PowerShell and run:
@@ -204,7 +223,7 @@ Phase 1 uses a public test video URL and HTML5 playback. Check:
 
 ## Current Phase Notes
 
-Phase 1 includes:
+Current build includes:
 
 - Windows app launch.
 - Home/browse shell.
@@ -214,11 +233,12 @@ Phase 1 includes:
 - User/VIP display.
 - Local history and favorites shell.
 - Diagnostics page.
+- Configurable real video API root.
+- Real home/search/detail/play-url requests through Electron IPC.
 
-Not yet connected in Phase 1:
+Not yet connected:
 
 - Real Android API login.
-- Real video catalog API.
 - Payment/wallet.
 - Downloads.
 - DLNA/cast.
